@@ -96,9 +96,10 @@ sudo mount -a
 
 # 3. LVM
 sudo apt install lvm2 -y
-sudo pvcreate /dev/sdb1
-sudo vgcreate vg_data /dev/sdb1
-sudo lvcreate -L 1G -n lv_data vg_data
+sudo umount /mnt/disk1 /mnt/disk2
+sudo pvcreate /dev/sdb1 /dev/sdc1
+sudo vgcreate vg_data /dev/sdb1 /dev/sdc1
+sudo lvcreate -L 1G -n lv_stockage vg_data
 
 # 4. Formater et monter
 sudo mkfs.ext4 /dev/vg_data/lv_data
