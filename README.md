@@ -328,6 +328,9 @@ Exécuter le script
 
 <img width="184" height="44" alt="image" src="https://github.com/user-attachments/assets/b940f2e4-6097-49e9-8ea0-932a2efe40a4" />
 
+Partie 2 — Stockage et LVM
+
+
 
 
 
