@@ -77,7 +77,8 @@ Exécuter le script
 
 ```bash
 # 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc), puis :
-sudo fdisk /dev/sdb   # créer partition → n, p, 1, default, default, w
+# créer partition → n, p, 1, default, default, w
+sudo fdisk /dev/sdb  
 sudo fdisk /dev/sdc
 
 sudo mkfs.ext4 /dev/sdb1
@@ -334,7 +335,9 @@ Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
 
 <img width="641" height="443" alt="image" src="https://github.com/user-attachments/assets/23e1cec1-0eba-4bb7-9085-1b8802cd566b" />
 
+créer partition → n, p, 1, default, default, w
 
+<img width="337" height="212" alt="image" src="https://github.com/user-attachments/assets/4fc58449-8a10-4cbd-ac2f-b8dc1ffa6156" />
 
 
 
