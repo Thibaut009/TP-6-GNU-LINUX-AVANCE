@@ -277,6 +277,8 @@ sudo chmod +x /usr/local/bin/*.sh
 
 # Annexe
 
+# Partie 1 — Utilisateurs et sécurité
+
 Création des groupes
 
 <img width="176" height="58" alt="image" src="https://github.com/user-attachments/assets/68b9c3ce-e05a-4847-b409-bde3871dfa5e" />
@@ -284,6 +286,10 @@ Création des groupes
 Création des utilisateurs et ajout aux groupes
 
 <img width="136" height="92" alt="image" src="https://github.com/user-attachments/assets/1b444fe1-c10f-439d-9402-d938e8a154aa" />
+
+Définition des mots de passe
+
+<img width="248" height="50" alt="image" src="https://github.com/user-attachments/assets/4a5f322c-b1e2-4185-bef9-2605c490e3bd" />
 
 
 
