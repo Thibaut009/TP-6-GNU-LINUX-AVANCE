@@ -294,6 +294,10 @@ Répertoires avec permissions
 
 <img width="358" height="80" alt="image" src="https://github.com/user-attachments/assets/db6c07b6-55ba-41f5-b6fb-f027ead9d27c" />
 
+Lecture seule pour eve
+
+<img width="241" height="58" alt="image" src="https://github.com/user-attachments/assets/f9b4888f-90ba-4eaa-a0c8-dbe821b4839e" />
+
 
 
 
