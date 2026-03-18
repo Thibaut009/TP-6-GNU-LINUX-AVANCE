@@ -63,6 +63,16 @@ sudo chage -M 90 "$USERNAME"
 echo "Utilisateur $USERNAME créé dans le groupe $GROUP."
 ```
 
+Rendre le script exécutable
+```bash
+chmod +x add_user.sh
+```
+
+Exécuter le script
+```bash
+./add_user.sh
+```
+
 # Partie 2 — Stockage et LVM
 
 ```bash
@@ -312,6 +322,9 @@ Script d'ajout automatique d'utilisateur → add_user.sh :
 
 <img width="405" height="304" alt="image" src="https://github.com/user-attachments/assets/3dc53605-6886-42ed-8d99-cc3a05b20def" />
 
+Rendre le script exécutable
+
+Exécuter le script
 
 <img width="184" height="44" alt="image" src="https://github.com/user-attachments/assets/b940f2e4-6097-49e9-8ea0-932a2efe40a4" />
 
