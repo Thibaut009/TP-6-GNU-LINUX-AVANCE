@@ -281,6 +281,10 @@ Création des groupes
 
 <img width="176" height="58" alt="image" src="https://github.com/user-attachments/assets/68b9c3ce-e05a-4847-b409-bde3871dfa5e" />
 
+Création des utilisateurs et ajout aux groupes
+
+<img width="136" height="92" alt="image" src="https://github.com/user-attachments/assets/1b444fe1-c10f-439d-9402-d938e8a154aa" />
+
 
 
 
