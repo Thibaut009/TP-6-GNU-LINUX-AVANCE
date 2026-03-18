@@ -36,11 +36,11 @@ sudo usermod -aG readonly eve
 sudo apt install libpam-pwquality -y
 ```
 
-Editer `/etc/security/pwquality.conf` :
+Editer `/etc/security/pwquality.conf` pour appliquer les règles : :
 ```
-minlen = 12
-dcredit = -1
-ucredit = -1
+minlen = 12    # longueur minimale du mot de passe
+dcredit = -1   # au moins un chiffre
+ucredit = -1   # au moins une majuscule
 ```
 
 Expiration des mots de passe :
