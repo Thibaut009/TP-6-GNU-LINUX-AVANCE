@@ -115,3 +115,46 @@ lvs --noheadings -o lv_path,data_percent | while read LV USAGE; do
     fi
 done
 ```
+
+# Partie 3 — Sauvegarde et automatisation
+
+backup.sh :
+```bash
+#!/bin/bash
+DATE=$(date +%Y%m%d_%H%M%S)
+DEST="/backup/home_$DATE.tar.gz"
+mkdir -p /backup
+tar -czf "$DEST" /home
+echo "Sauvegarde créée : $DEST"
+```
+
+backup_rsync.sh :
+```bash
+#!/bin/bash
+rsync -av --delete \
+  --exclude='*.tmp' --exclude='*.log' --exclude='/home/*/.cache' \
+  /home/ /backup/backup_rsync/
+echo "Sauvegarde rsync terminée."
+```
+
+Cron :
+```bash
+sudo crontab -e
+# Ajouter :
+0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+```
+
+restore.sh :
+```bash
+#!/bin/bash
+read -p "Archive à restaurer : " ARCHIVE
+RESTORE_DIR="/tmp/restore_test"
+mkdir -p "$RESTORE_DIR"
+tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"
+echo "=== Comparaison ==="
+diff -rq /home "$RESTORE_DIR/home" && echo "Contenu identique." || echo "Différences détectées."
+```
+
+
+
+
