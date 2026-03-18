@@ -277,7 +277,7 @@ sudo chmod +x /usr/local/bin/*.sh
 
 # Annexe
 
-# Création des groupes
+Création des groupes
 <img width="176" height="58" alt="image" src="https://github.com/user-attachments/assets/68b9c3ce-e05a-4847-b409-bde3871dfa5e" />
 
 
