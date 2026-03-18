@@ -304,6 +304,10 @@ Editer /etc/security/pwquality.conf pour appliquer les règles
 
 <img width="401" height="302" alt="image" src="https://github.com/user-attachments/assets/ceaa20ce-b395-4890-a0ad-b32188004d66" />
 
+Expiration des mots de passe :
+
+<img width="310" height="144" alt="image" src="https://github.com/user-attachments/assets/a1296235-f092-4ff0-b42f-09e8b1e29fdb" />
+
 
 
 
