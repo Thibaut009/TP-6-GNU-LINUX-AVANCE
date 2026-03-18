@@ -155,6 +155,126 @@ echo "=== Comparaison ==="
 diff -rq /home "$RESTORE_DIR/home" && echo "Contenu identique." || echo "Différences détectées."
 ```
 
+# Partie 4 — Firewall et fail2ban
+```bash
+# 1. UFW
+sudo apt install ufw -y
+sudo ufw default deny incoming
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw enable
+
+# 2. Limiter par sous-réseau (ex: autoriser SSH depuis 192.168.1.0/24 seulement)
+sudo ufw delete allow ssh
+sudo ufw allow from 192.168.1.0/24 to any port 22
+
+# 3. fail2ban
+sudo apt install fail2ban -y
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+```
+
+Editer /etc/fail2ban/jail.local :
+```bash
+[sshd]
+enabled  = true
+port     = ssh
+maxretry = 3
+bantime  = 600
+findtime = 600
+```
+
+```bash
+sudo systemctl enable --now fail2ban
+```
+
+Script analyse fail2ban → fail2ban_alert.sh :
+```bash
+#!/bin/bash
+LOG="/var/log/fail2ban.log"
+OUTPUT="/home/alice/fail2ban_alert.log"
+echo "=== Rapport fail2ban - $(date) ===" > "$OUTPUT"
+echo "" >> "$OUTPUT"
+echo "IPs bannies :" >> "$OUTPUT"
+grep "Ban " "$LOG" | awk '{print $NF}' | sort | uniq -c | sort -rn >> "$OUTPUT"
+echo "" >> "$OUTPUT"
+echo "Total bans : $(grep -c 'Ban ' $LOG)" >> "$OUTPUT"
+echo "Rapport généré dans $OUTPUT"
+```
+
+Pour CrowdSec :
+```bash
+sudo apt install crowdsec -y
+sudo apt install crowdsec-firewall-bouncer-iptables -y
+# Le scénario SSH est actif par défaut
+sudo cscli scenarios list
+```
+
+# Partie 5 — Monitoring
+
+monitor.sh :
+```bash
+#!/bin/bash
+
+show_info() {
+    echo "==============================="
+    echo "  MONITORING SYSTÈME"
+    echo "==============================="
+    echo "Hostname     : $(hostname)"
+    echo "Noyau        : $(uname -r)"
+    echo ""
+    echo "--- CPU ---"
+    top -bn1 | grep "Cpu(s)" | awk '{print "Utilisation : " 100-$8 "%"}'
+    echo ""
+    echo "--- MÉMOIRE ---"
+    free -h | awk '/^Mem:/ {printf "Utilisée : %s / %s (%.1f%%)\n", $3, $2, $3/$2*100}'
+    echo ""
+    echo "--- SWAP ---"
+    SWAP_PCT=$(free | awk '/^Swap:/ {if($2>0) printf "%.0f", $3/$2*100; else print "0"}')
+    echo "Swap utilisé : ${SWAP_PCT}%"
+    [ "$SWAP_PCT" -gt 50 ] && echo "⚠️  ALERTE : Swap > 50% !"
+    echo ""
+    echo "--- DISQUES ---"
+    df -h --output=target,pcent | tail -n +2 | while read MOUNT PCT; do
+        VAL=${PCT%%%}
+        echo "$MOUNT : $PCT utilisé"
+        [ "$VAL" -gt 80 ] && echo "⚠️  ALERTE : $MOUNT > 80% !"
+    done
+}
+
+menu() {
+    echo ""
+    echo "==============================="
+    echo "  MENU ADMINISTRATION"
+    echo "==============================="
+    echo "1) Afficher monitoring système"
+    echo "2) Lancer sauvegarde tar"
+    echo "3) Lancer sauvegarde rsync"
+    echo "4) Restaurer une archive"
+    echo "5) Vérifier logs fail2ban"
+    echo "6) Quitter"
+    echo ""
+    read -p "Choix : " CHOICE
+    case $CHOICE in
+        1) show_info ;;
+        2) bash /usr/local/bin/backup.sh ;;
+        3) bash /usr/local/bin/backup_rsync.sh ;;
+        4) bash /usr/local/bin/restore.sh ;;
+        5) bash /usr/local/bin/fail2ban_alert.sh && cat /home/alice/fail2ban_alert.log ;;
+        6) exit 0 ;;
+        *) echo "Choix invalide." ;;
+    esac
+    menu
+}
+
+menu
+```
+
+Installation des scripts
+```bash
+sudo cp backup.sh backup_rsync.sh restore.sh fail2ban_alert.sh monitor.sh add_user.sh lv_alert.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/*.sh
+```
+
 
 
 
