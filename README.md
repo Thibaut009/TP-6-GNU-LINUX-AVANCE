@@ -332,7 +332,8 @@ Exécuter le script
 
 Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
 
-<img width="638" height="372" alt="image" src="https://github.com/user-attachments/assets/d4e5acbe-fd2b-43b2-98fc-486fa185f061" />
+<img width="641" height="443" alt="image" src="https://github.com/user-attachments/assets/23e1cec1-0eba-4bb7-9085-1b8802cd566b" />
+
 
 
 
