@@ -335,7 +335,7 @@ Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
 
 <img width="641" height="443" alt="image" src="https://github.com/user-attachments/assets/23e1cec1-0eba-4bb7-9085-1b8802cd566b" />
 
-créer partition → n, p, 1, default, default, w
+Créer partition → n, p, 1, default, default, w
 
 <img width="337" height="212" alt="image" src="https://github.com/user-attachments/assets/4fc58449-8a10-4cbd-ac2f-b8dc1ffa6156" />
 
