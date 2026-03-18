@@ -298,6 +298,9 @@ Lecture seule pour eve
 
 <img width="241" height="58" alt="image" src="https://github.com/user-attachments/assets/f9b4888f-90ba-4eaa-a0c8-dbe821b4839e" />
 
+Politiques de mot de passe
+
+<img width="356" height="302" alt="image" src="https://github.com/user-attachments/assets/4251db2c-44de-4012-98cb-2b50baf8035e" />
 
 
 
