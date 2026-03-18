@@ -291,6 +291,11 @@ Définition des mots de passe
 
 <img width="248" height="50" alt="image" src="https://github.com/user-attachments/assets/4a5f322c-b1e2-4185-bef9-2605c490e3bd" />
 
+Répertoires avec permissions
+
+<img width="358" height="80" alt="image" src="https://github.com/user-attachments/assets/db6c07b6-55ba-41f5-b6fb-f027ead9d27c" />
+
+
 
 
 
