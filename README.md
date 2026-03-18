@@ -330,6 +330,9 @@ Exécuter le script
 
 # Partie 2 — Stockage et LVM
 
+Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
+
+<img width="638" height="372" alt="image" src="https://github.com/user-attachments/assets/d4e5acbe-fd2b-43b2-98fc-486fa185f061" />
 
 
 
