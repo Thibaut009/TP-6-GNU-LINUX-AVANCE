@@ -341,6 +341,10 @@ Créer partition → n, p, 1, default, default, w
 
 <img width="267" height="203" alt="image" src="https://github.com/user-attachments/assets/cee0911d-deb7-400d-a774-27e9f8c72b64" />
 
+Montage permanent
+
+<img width="403" height="302" alt="image" src="https://github.com/user-attachments/assets/eb93a76a-6830-4d26-8eb9-3bb847958896" />
+
 
 
 
