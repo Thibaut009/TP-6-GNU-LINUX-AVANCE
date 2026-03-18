@@ -350,7 +350,8 @@ LVM
 
 <img width="400" height="308" alt="image" src="https://github.com/user-attachments/assets/8a0e40fa-5e8c-44f3-9bb4-63b770d558fb" />
 
-<img width="331" height="92" alt="image" src="https://github.com/user-attachments/assets/9c9444a5-5e80-41e5-92fa-72dd9276d4ee" />
+<img width="332" height="108" alt="image" src="https://github.com/user-attachments/assets/67916bd4-5a67-485b-9a88-395b976d638b" />
+
 
 
 
