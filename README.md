@@ -37,20 +37,20 @@ sudo apt install libpam-pwquality -y
 ```
 
 Editer `/etc/security/pwquality.conf` pour appliquer les règles : :
-```
+```bash
 minlen = 12    # longueur minimale du mot de passe
 dcredit = -1   # au moins un chiffre
 ucredit = -1   # au moins une majuscule
 ```
 
 Expiration des mots de passe :
-```
+```bash
 sudo chage -M 90 -W 7 alice
 sudo chage -M 90 -W 7 bob
 ```
 
 Script d'ajout automatique d'utilisateur → add_user.sh :
-```
+```bash
 #!/bin/bash
 read -p "Nom d'utilisateur : " USERNAME
 read -p "Groupe : " GROUP
@@ -66,7 +66,7 @@ echo "Utilisateur $USERNAME créé dans le groupe $GROUP."
 
 # Partie 2 — Stockage et LVM
 
-```
+```bash
 # 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc), puis :
 sudo fdisk /dev/sdb   # créer partition → n, p, 1, default, default, w
 sudo fdisk /dev/sdc
@@ -103,7 +103,7 @@ cat /mnt/lv_data/test.txt   # vérifier intégrité
 ```
 
 Script alerte espace LV → lv_alert.sh :
-```
+```bash
 #!/bin/bash
 THRESHOLD=80
 lvs --noheadings -o lv_path,data_percent | while read LV USAGE; do
