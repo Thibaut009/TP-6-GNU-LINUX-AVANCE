@@ -29,7 +29,6 @@ sudo chown root:ops /srv/ops && sudo chmod 770 /srv/ops
 sudo chown root:readonly /srv/shared && sudo chmod 750 /srv/shared
 
 # Lecture seule pour eve
-sudo chown root:readonly /srv/shared
 sudo usermod -aG readonly eve
 
 # Politiques de mot de passe
