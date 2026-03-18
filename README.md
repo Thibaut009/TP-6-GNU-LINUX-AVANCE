@@ -275,6 +275,11 @@ sudo cp backup.sh backup_rsync.sh restore.sh fail2ban_alert.sh monitor.sh add_us
 sudo chmod +x /usr/local/bin/*.sh
 ```
 
+# Annexe
+
+
+
+
 
 
 
