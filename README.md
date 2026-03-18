@@ -308,6 +308,10 @@ Expiration des mots de passe :
 
 <img width="310" height="144" alt="image" src="https://github.com/user-attachments/assets/a1296235-f092-4ff0-b42f-09e8b1e29fdb" />
 
+Script d'ajout automatique d'utilisateur → add_user.sh :
+
+<img width="405" height="304" alt="image" src="https://github.com/user-attachments/assets/3dc53605-6886-42ed-8d99-cc3a05b20def" />
+
 
 
 
