@@ -63,3 +63,55 @@ echo "$USERNAME:$PASSWORD" | sudo chpasswd
 sudo chage -M 90 "$USERNAME"
 echo "Utilisateur $USERNAME créé dans le groupe $GROUP."
 ```
+
+# Partie 2 — Stockage et LVM
+
+```
+# 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc), puis :
+sudo fdisk /dev/sdb   # créer partition → n, p, 1, default, default, w
+sudo fdisk /dev/sdc
+
+sudo mkfs.ext4 /dev/sdb1
+sudo mkfs.ext4 /dev/sdc1
+
+# 2. Montage permanent
+sudo mkdir -p /mnt/disk1 /mnt/disk2
+# Récupérer UUIDs
+sudo blkid /dev/sdb1
+sudo blkid /dev/sdc1
+# Ajouter dans /etc/fstab :
+# UUID=xxx /mnt/disk1 ext4 defaults 0 2
+# UUID=yyy /mnt/disk2 ext4 defaults 0 2
+sudo mount -a
+
+# 3. LVM
+sudo apt install lvm2 -y
+sudo pvcreate /dev/sdb1
+sudo vgcreate vg_data /dev/sdb1
+sudo lvcreate -L 1G -n lv_data vg_data
+
+# 4. Formater et monter
+sudo mkfs.ext4 /dev/vg_data/lv_data
+sudo mkdir /mnt/lv_data
+sudo mount /dev/vg_data/lv_data /mnt/lv_data
+echo "test LVM" | sudo tee /mnt/lv_data/test.txt
+
+# 5. Redimensionner
+sudo lvextend -L +500M /dev/vg_data/lv_data
+sudo resize2fs /dev/vg_data/lv_data
+cat /mnt/lv_data/test.txt   # vérifier intégrité
+```
+
+Script alerte espace LV → lv_alert.sh :
+```
+#!/bin/bash
+THRESHOLD=80
+lvs --noheadings -o lv_path,data_percent | while read LV USAGE; do
+    USAGE_INT=${USAGE%.*}
+    if [ "$USAGE_INT" -ge "$THRESHOLD" ]; then
+        echo "ALERTE : $LV utilise ${USAGE}% de son espace !"
+    else
+        echo "$LV : ${USAGE}% utilisé (OK)"
+    fi
+done
+```
