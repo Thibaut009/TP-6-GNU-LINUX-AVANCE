@@ -339,6 +339,9 @@ Créer partition → n, p, 1, default, default, w
 
 <img width="337" height="212" alt="image" src="https://github.com/user-attachments/assets/4fc58449-8a10-4cbd-ac2f-b8dc1ffa6156" />
 
+<img width="267" height="203" alt="image" src="https://github.com/user-attachments/assets/cee0911d-deb7-400d-a774-27e9f8c72b64" />
+
+
 
 
 
