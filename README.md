@@ -298,7 +298,9 @@ Lecture seule pour eve
 
 <img width="241" height="58" alt="image" src="https://github.com/user-attachments/assets/f9b4888f-90ba-4eaa-a0c8-dbe821b4839e" />
 
-Politiques de mot de passe / Editer /etc/security/pwquality.conf pour appliquer les règles
+Politiques de mot de passe 
+
+Editer /etc/security/pwquality.conf pour appliquer les règles
 
 <img width="401" height="302" alt="image" src="https://github.com/user-attachments/assets/ceaa20ce-b395-4890-a0ad-b32188004d66" />
 
