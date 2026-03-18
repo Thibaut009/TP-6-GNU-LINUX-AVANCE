@@ -345,6 +345,11 @@ Montage permanent
 
 <img width="403" height="302" alt="image" src="https://github.com/user-attachments/assets/eb93a76a-6830-4d26-8eb9-3bb847958896" />
 
+LVM
+
+<img width="400" height="308" alt="image" src="https://github.com/user-attachments/assets/8a0e40fa-5e8c-44f3-9bb4-63b770d558fb" />
+
+
 
 
 
