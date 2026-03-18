@@ -76,8 +76,8 @@ Exécuter le script
 # Partie 2 — Stockage et LVM
 
 ```bash
-# 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc), puis :
-# créer partition → n, p, 1, default, default, w
+# 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
+# Créer partition → n, p, 1, default, default, w
 sudo fdisk /dev/sdb  
 sudo fdisk /dev/sdc
 
