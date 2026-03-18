@@ -300,7 +300,8 @@ Lecture seule pour eve
 
 Politiques de mot de passe
 
-<img width="356" height="302" alt="image" src="https://github.com/user-attachments/assets/4251db2c-44de-4012-98cb-2b50baf8035e" />
+<img width="401" height="302" alt="image" src="https://github.com/user-attachments/assets/ceaa20ce-b395-4890-a0ad-b32188004d66" />
+
 
 
 
