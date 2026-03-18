@@ -312,6 +312,7 @@ Script d'ajout automatique d'utilisateur → add_user.sh :
 
 <img width="405" height="304" alt="image" src="https://github.com/user-attachments/assets/3dc53605-6886-42ed-8d99-cc3a05b20def" />
 
+
 <img width="184" height="44" alt="image" src="https://github.com/user-attachments/assets/b940f2e4-6097-49e9-8ea0-932a2efe40a4" />
 
 
