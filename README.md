@@ -35,9 +35,31 @@ sudo usermod -aG readonly eve
 # Politiques de mot de passe
 sudo apt install libpam-pwquality -y
 ```
+
 Editer `/etc/security/pwquality.conf` :
 ```
 minlen = 12
 dcredit = -1
 ucredit = -1
+```
+
+Expiration des mots de passe :
+```
+sudo chage -M 90 -W 7 alice
+sudo chage -M 90 -W 7 bob
+```
+
+Script d'ajout automatique d'utilisateur → add_user.sh :
+```
+#!/bin/bash
+read -p "Nom d'utilisateur : " USERNAME
+read -p "Groupe : " GROUP
+read -s -p "Mot de passe : " PASSWORD
+echo
+
+sudo groupadd "$GROUP" 2>/dev/null
+sudo useradd -m -s /bin/bash -G "$GROUP" "$USERNAME"
+echo "$USERNAME:$PASSWORD" | sudo chpasswd
+sudo chage -M 90 "$USERNAME"
+echo "Utilisateur $USERNAME créé dans le groupe $GROUP."
 ```
