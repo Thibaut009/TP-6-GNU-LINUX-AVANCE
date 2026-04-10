@@ -437,9 +437,11 @@ fichiers temporaires.
 
 <img width="249" height="304" alt="image" src="https://github.com/user-attachments/assets/00fcc5bf-d47d-41eb-8232-b01de66b1d06" />
 
-Écrivez un script qui restaure une archive et compare le contenu avec l’original 
+Configurez cron pour que la sauvegarde s’exécute tous les jours à 2h. 
 
 <img width="301" height="223" alt="image" src="https://github.com/user-attachments/assets/ce20d879-8488-421c-9142-7409a2a6c2ac" />
+
+Écrivez un script qui restaure une archive et compare le contenu avec l’original 
 
 <img width="403" height="305" alt="image" src="https://github.com/user-attachments/assets/200ec1ef-6159-4ef0-9553-ffbf1f592010" />
 
