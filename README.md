@@ -108,9 +108,9 @@ sudo mount /dev/vg_data/lv_stockage /mnt/lv_stockage
 echo "test LVM" | sudo tee /mnt/lv_stockage/test.txt
 
 # 5. Redimensionner
-sudo lvextend -L +500M /dev/vg_data/lv_data
-sudo resize2fs /dev/vg_data/lv_data
-cat /mnt/lv_data/test.txt   # vérifier intégrité
+sudo lvextend -L +500M /dev/vg_data/lv_stockage
+sudo resize2fs /dev/vg_data/lv_stockage
+cat /mnt/lv_stockage/test.txt   # vérifier intégrité
 ```
 
 Script alerte espace LV → lv_alert.sh :
