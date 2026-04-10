@@ -356,7 +356,9 @@ Formater et monter
 
 <img width="290" height="139" alt="image" src="https://github.com/user-attachments/assets/c5971826-9b7e-459f-955b-0b8eac1ef9b2" />
 
+Redimensionner
 
+<img width="401" height="77" alt="image" src="https://github.com/user-attachments/assets/bf6a5a20-b064-4d20-a12a-c2b9333707a9" />
 
 
 
