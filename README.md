@@ -1,137 +1,291 @@
-# TP-6-GNU-LINUX-AVANCE
+# TP-6 — GNU/Linux Avancé
 
-# Partie 1 — Utilisateurs et sécurité
+---
+
+## Partie 1 — Utilisateurs et sécurité
+
+Cette partie couvre la gestion des utilisateurs et des groupes sous Linux, ainsi que la mise en place de politiques de sécurité pour les mots de passe.
+
+---
+
+### Création des groupes
+
+On crée trois groupes distincts pour cloisonner les accès : les développeurs (`devs`), les opérateurs (`ops`) et les utilisateurs en lecture seule (`readonly`).
 
 ```bash
-# Création des groupes
 sudo groupadd devs
 sudo groupadd ops
 sudo groupadd readonly
+```
 
-# Création des utilisateurs et ajout aux groupes
-sudo useradd -m -s /bin/bash -G devs alice
-sudo useradd -m -s /bin/bash -G devs bob
-sudo useradd -m -s /bin/bash -G ops charlie
-sudo useradd -m -s /bin/bash -G ops diana
+> `groupadd` crée un nouveau groupe système. Les groupes permettent de gérer les permissions de manière collective plutôt qu'utilisateur par utilisateur.
+
+---
+
+### Création des utilisateurs et ajout aux groupes
+
+On crée cinq utilisateurs et on les affecte à leur groupe respectif. Eve reçoit un shell restreint (`rbash`) qui limite les commandes qu'elle peut exécuter.
+
+```bash
+sudo useradd -m -s /bin/bash  -G devs     alice
+sudo useradd -m -s /bin/bash  -G devs     bob
+sudo useradd -m -s /bin/bash  -G ops      charlie
+sudo useradd -m -s /bin/bash  -G ops      diana
 sudo useradd -m -s /bin/rbash -G readonly eve   # shell restreint
+```
 
-# Définition des mots de passe
-echo "alice:Alice123!" | sudo chpasswd
-echo "bob:Bob123!" | sudo chpasswd
+| Option | Signification |
+|--------|---------------|
+| `-m` | Crée le répertoire home de l'utilisateur (`/home/nom`) |
+| `-s /bin/bash` | Définit le shell par défaut |
+| `-s /bin/rbash` | Shell restreint : empêche la navigation hors du home, la redirection, etc. |
+| `-G` | Ajoute l'utilisateur à un groupe supplémentaire |
+
+---
+
+### Définition des mots de passe
+
+On assigne un mot de passe à chaque utilisateur via `chpasswd`, qui lit les paires `utilisateur:motdepasse` depuis l'entrée standard.
+
+```bash
+echo "alice:Alice123!"     | sudo chpasswd
+echo "bob:Bob123!"         | sudo chpasswd
 echo "charlie:Charlie123!" | sudo chpasswd
-echo "diana:Diana123!" | sudo chpasswd
-echo "eve:Eve123!" | sudo chpasswd
+echo "diana:Diana123!"     | sudo chpasswd
+echo "eve:Eve123!"         | sudo chpasswd
+```
 
-# Répertoires avec permissions
+> `chpasswd` permet de définir des mots de passe en masse sans passer par `passwd` de manière interactive. Le mot de passe est transmis via un pipe (`|`) pour éviter de l'afficher dans le terminal.
+
+---
+
+### Répertoires avec permissions
+
+On crée un répertoire dédié pour chaque groupe et on configure les permissions de façon à ce que seuls les membres du groupe concerné puissent y accéder.
+
+```bash
 sudo mkdir -p /srv/devs /srv/ops /srv/shared
-sudo chown root:devs /srv/devs && sudo chmod 770 /srv/devs
-sudo chown root:ops /srv/ops && sudo chmod 770 /srv/ops
+sudo chown root:devs     /srv/devs   && sudo chmod 770 /srv/devs
+sudo chown root:ops      /srv/ops    && sudo chmod 770 /srv/ops
 sudo chown root:readonly /srv/shared && sudo chmod 750 /srv/shared
+```
 
-# Lecture seule pour eve
+| Commande | Signification |
+|----------|---------------|
+| `mkdir -p` | Crée le répertoire et les parents manquants |
+| `chown root:devs` | Propriétaire = root, groupe = devs |
+| `chmod 770` | Propriétaire et groupe : rwx. Autres : aucun droit |
+| `chmod 750` | Propriétaire : rwx. Groupe : r-x. Autres : aucun droit |
+
+> Le mode `750` sur `/srv/shared` permet aux membres de `readonly` de lire les fichiers mais pas d'en créer ou modifier.
+
+---
+
+### Lecture seule pour eve
+
+On ajoute eve au groupe `readonly` pour lui donner accès à `/srv/shared` en lecture seule.
+
+```bash
 sudo usermod -aG readonly eve
+```
 
-# Politiques de mot de passe
+> `usermod -aG` ajoute l'utilisateur à un groupe **supplémentaire** sans le retirer des groupes existants. Sans le `-a` (append), l'utilisateur serait retiré de tous ses autres groupes.
+
+---
+
+### Politiques de mot de passe
+
+On installe le module PAM `libpam-pwquality` qui permet d'imposer des règles de complexité sur les mots de passe.
+
+```bash
 sudo apt install libpam-pwquality -y
 ```
 
-Editer `/etc/security/pwquality.conf` pour appliquer les règles : :
-```bash
+Éditer `/etc/security/pwquality.conf` :
+
+```
 minlen = 12    # longueur minimale du mot de passe
-dcredit = -1   # au moins un chiffre
-ucredit = -1   # au moins une majuscule
+dcredit = -1   # au moins un chiffre obligatoire
+ucredit = -1   # au moins une majuscule obligatoire
 ```
 
-Expiration des mots de passe :
+> Les valeurs négatives pour `dcredit` et `ucredit` signifient un nombre **minimum requis** de caractères du type concerné. Une valeur positive représenterait un bonus de complexité.
+
+---
+
+### Expiration des mots de passe
+
+On force le renouvellement des mots de passe tous les 90 jours avec un avertissement 7 jours avant l'expiration.
+
 ```bash
 sudo chage -M 90 -W 7 alice
 sudo chage -M 90 -W 7 bob
 ```
 
-Script d'ajout automatique d'utilisateur → add_user.sh :
+| Option | Signification |
+|--------|---------------|
+| `-M 90` | Durée de vie maximale du mot de passe : 90 jours |
+| `-W 7` | Avertissement 7 jours avant l'expiration |
+
+> `chage` (change age) gère le vieillissement des mots de passe. On peut vérifier la configuration d'un utilisateur avec `sudo chage -l alice`.
+
+---
+
+### Script d'ajout automatique — `add_user.sh`
+
+Ce script interactif automatise la création d'un utilisateur : il demande le nom, le groupe et le mot de passe, crée le groupe si nécessaire, crée l'utilisateur et applique la politique d'expiration.
+
 ```bash
 #!/bin/bash
-read -p "Nom d'utilisateur : " USERNAME
-read -p "Groupe : " GROUP
-read -s -p "Mot de passe : " PASSWORD
-echo
+read -p "Nom d'utilisateur : " USERNAME   # Saisie du nom
+read -p "Groupe : " GROUP                  # Saisie du groupe
+read -s -p "Mot de passe : " PASSWORD      # Saisie sans affichage (-s = silent)
+echo                                        # Saut de ligne après la saisie masquée
 
-sudo groupadd "$GROUP" 2>/dev/null
+sudo groupadd "$GROUP" 2>/dev/null          # Crée le groupe (ignore l'erreur s'il existe déjà)
 sudo useradd -m -s /bin/bash -G "$GROUP" "$USERNAME"
-echo "$USERNAME:$PASSWORD" | sudo chpasswd
-sudo chage -M 90 "$USERNAME"
+echo "$USERNAME:$PASSWORD" | sudo chpasswd  # Applique le mot de passe
+sudo chage -M 90 "$USERNAME"                # Expire dans 90 jours
 echo "Utilisateur $USERNAME créé dans le groupe $GROUP."
 ```
 
-Rendre le script exécutable
+> `2>/dev/null` redirige les erreurs vers le néant. Utile ici car `groupadd` retourne une erreur si le groupe existe déjà, ce qui est un comportement attendu et non bloquant.
+
 ```bash
-chmod +x add_user.sh
+chmod +x add_user.sh   # Rend le script exécutable
+./add_user.sh          # Lance le script
 ```
 
-Exécuter le script
-```bash
-./add_user.sh
+---
+
+## Partie 2 — Stockage et LVM
+
+LVM (Logical Volume Manager) est une couche d'abstraction entre les disques physiques et le système de fichiers. Elle permet de redimensionner, déplacer et gérer les partitions de manière flexible, sans manipuler directement les disques.
+
+**Architecture LVM :**
+```
+Disques physiques (PV) → Groupe de volumes (VG) → Volumes logiques (LV)
+      sdb1, sdc1       →        vg_data          →     lv_stockage
 ```
 
-# Partie 2 — Stockage et LVM
+---
+
+### 1. Ajout de 2 disques virtuels (sdb, sdc)
+
+> Ajouter les disques dans VirtualBox (Paramètres → Stockage) avant de démarrer la VM.
+
+On partitionne chaque disque avec `fdisk` en créant une partition principale, puis on les formate en ext4.
 
 ```bash
-# 1. Ajouter 2 disques virtuels dans VirtualBox (sdb, sdc)
-# Créer partition → n, p, 1, default, default, w
-sudo fdisk /dev/sdb  
+# Partitionner chaque disque : n, p, 1, default, default, w
+sudo fdisk /dev/sdb
 sudo fdisk /dev/sdc
 
-sudo mkfs.ext4 /dev/sdb1
+sudo mkfs.ext4 /dev/sdb1   # Formate la partition en ext4
 sudo mkfs.ext4 /dev/sdc1
+```
 
-# 2. Montage permanent
+Dans `fdisk`, la séquence de touches est :
+- `n` → nouvelle partition
+- `p` → partition primaire
+- `1` → numéro de partition
+- Entrée × 2 → utiliser tout l'espace disponible
+- `w` → écrire les changements et quitter
+
+---
+
+### 2. Montage permanent
+
+On crée les points de montage et on configure `/etc/fstab` pour que les disques soient montés automatiquement au démarrage.
+
+```bash
 sudo mkdir -p /mnt/disk1 /mnt/disk2
-# Récupérer UUIDs
+
+# Récupérer les UUIDs (identifiants uniques des partitions)
 sudo blkid /dev/sdb1
 sudo blkid /dev/sdc1
+
 # Ajouter dans /etc/fstab :
 # UUID=xxx /mnt/disk1 ext4 defaults 0 2
 # UUID=yyy /mnt/disk2 ext4 defaults 0 2
-sudo mount -a
 
-# 3. LVM
-sudo apt install lvm2 -y
-sudo umount /mnt/disk1 /mnt/disk2
-sudo pvcreate /dev/sdb1 /dev/sdc1
-sudo vgcreate vg_data /dev/sdb1 /dev/sdc1
-sudo lvcreate -L 1G -n lv_stockage vg_data
+sudo mount -a   # Monte tous les systèmes de fichiers déclarés dans fstab
+```
 
-# 4. Formater et monter
-sudo mkfs.ext4 /dev/vg_data/lv_stockage
-sudo mkdir /mnt/lv_stockage
+> On utilise les UUID plutôt que les noms de périphériques (`/dev/sdb1`) car ces derniers peuvent changer d'un démarrage à l'autre si l'ordre de détection des disques change.
+
+> Dans `/etc/fstab`, le dernier champ `0 2` indique : pas de dump (`0`), vérification fsck en second (`2`). La partition root utilise `1`.
+
+---
+
+### 3. Configuration LVM
+
+On transforme les partitions en volumes physiques LVM, on les regroupe dans un groupe de volumes, puis on crée un volume logique.
+
+```bash
+sudo apt install lvm2 -y                    # Installe les outils LVM
+sudo umount /mnt/disk1 /mnt/disk2           # Démonte les disques avant de les passer à LVM
+sudo pvcreate /dev/sdb1 /dev/sdc1           # Initialise les volumes physiques (PV)
+sudo vgcreate vg_data /dev/sdb1 /dev/sdc1  # Crée le groupe de volumes (VG)
+sudo lvcreate -L 1G -n lv_stockage vg_data # Crée un volume logique (LV) de 1 Go
+```
+
+| Commande | Rôle |
+|----------|------|
+| `pvcreate` | Prépare une partition pour LVM (Physical Volume) |
+| `vgcreate` | Regroupe plusieurs PV en un seul pool de stockage (Volume Group) |
+| `lvcreate -L 1G` | Découpe une tranche de 1 Go dans le VG (Logical Volume) |
+
+---
+
+### 4. Formater et monter le volume logique
+
+Le volume logique se comporte comme une partition classique : on le formate puis on le monte.
+
+```bash
+sudo mkfs.ext4 /dev/vg_data/lv_stockage          # Formate le LV en ext4
+sudo mkdir /mnt/lv_stockage                       # Crée le point de montage
 sudo mount /dev/vg_data/lv_stockage /mnt/lv_stockage
-echo "test LVM" | sudo tee /mnt/lv_stockage/test.txt
+echo "test LVM" | sudo tee /mnt/lv_stockage/test.txt  # Écrit un fichier de test
+```
 
-# 5. Redimensionner
-sudo lvextend -L +500M /dev/vg_data/lv_stockage
-sudo resize2fs /dev/vg_data/lv_stockage
-cat /mnt/lv_stockage/test.txt   # vérifier intégrité
+> Le volume logique est accessible via `/dev/vg_data/lv_stockage` ou son alias `/dev/mapper/vg_data-lv_stockage`.
 
-# 6. Écrivez un script qui calcule l’espace libre sur chaque LV et alerte si >80% utilisé. 
-# Créer le script
+---
+
+### 5. Redimensionner le volume
+
+L'un des grands avantages de LVM est la possibilité d'étendre un volume sans perte de données ni démontage.
+
+```bash
+sudo lvextend -L +500M /dev/vg_data/lv_stockage  # Agrandit le LV de 500 Mo
+sudo resize2fs /dev/vg_data/lv_stockage           # Étend le système de fichiers pour occuper le nouvel espace
+cat /mnt/lv_stockage/test.txt                     # Vérifie que les données sont intactes
+```
+
+> `lvextend` agrandit le volume logique au niveau LVM, mais le système de fichiers ne connaît pas encore ce nouvel espace. `resize2fs` est nécessaire pour que ext4 utilise effectivement les blocs supplémentaires.
+
+---
+
+### 6. Script de surveillance LVM — `check_lvm.sh`
+
+Ce script parcourt tous les volumes logiques, vérifie leur taux d'utilisation et affiche une alerte si celui-ci dépasse 80%.
+
+```bash
 sudo nano /usr/local/bin/check_lvm.sh
-
-# Rendre exécutable
 sudo chmod +x /usr/local/bin/check_lvm.sh
-
-# Lancer
 sudo /usr/local/bin/check_lvm.sh
 ```
 
 ```bash
 #!/bin/bash
-THRESHOLD=80
+THRESHOLD=80   # Seuil d'alerte en pourcentage
 
 echo "=== Vérification espace LVM ==="
 echo ""
 
 lvs --noheadings -o lv_path | while read LV; do
-    # Vérifier si le LV est monté
+    # Cherche le point de montage associé au LV
     MOUNT=$(findmnt -n -o TARGET "$LV" 2>/dev/null)
 
     if [ -z "$MOUNT" ]; then
@@ -139,7 +293,7 @@ lvs --noheadings -o lv_path | while read LV; do
         continue
     fi
 
-    # Lire l'usage réel via df
+    # Récupère le pourcentage d'utilisation via df
     USAGE=$(df "$MOUNT" | awk 'NR==2 {gsub("%",""); print $5}')
 
     if [ "$USAGE" -ge "$THRESHOLD" ]; then
@@ -150,35 +304,51 @@ lvs --noheadings -o lv_path | while read LV; do
 done
 ```
 
-# Partie 3 — Sauvegarde et automatisation
+> `lvs --noheadings -o lv_path` liste les chemins de tous les LV sans en-tête. `findmnt` retrouve le point de montage d'un périphérique. `awk` extrait la 5e colonne de `df` (le pourcentage) et `gsub` supprime le symbole `%`.
 
-backup.sh :
+---
+
+## Partie 3 — Sauvegarde et automatisation
+
+Cette partie met en place une stratégie de sauvegarde complète : archive complète avec `tar`, sauvegarde incrémentale avec `rsync`, automatisation via `cron`, et vérification de restauration.
+
+---
+
+### Script de sauvegarde tar — `backup.sh`
+
+Ce script crée une archive compressée du répertoire `/home` avec la date et l'heure dans le nom du fichier pour faciliter l'identification et éviter les écrasements.
+
 ```bash
-# Créer le script
 sudo nano /usr/local/bin/backup.sh
+sudo chmod +x /usr/local/bin/backup.sh
+sudo /usr/local/bin/backup.sh
 ```
 
 ```bash
 #!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-DEST="/backup/home_$DATE.tar.gz"
-mkdir -p /backup
-tar -czf "$DEST" /home
+DATE=$(date +%Y%m%d_%H%M%S)         # Ex : 20240115_143022
+DEST="/backup/home_$DATE.tar.gz"    # Nom unique basé sur la date
+mkdir -p /backup                    # Crée le dossier de destination si absent
+tar -czf "$DEST" /home              # Archive et compresse /home
 echo "Sauvegarde créée : $DEST"
 ```
 
-```bash
-# Rendre exécutable
-sudo chmod +x /usr/local/bin/backup.sh
+| Option tar | Signification |
+|------------|---------------|
+| `-c` | Crée une nouvelle archive |
+| `-z` | Compresse avec gzip |
+| `-f` | Spécifie le nom du fichier de sortie |
 
-# Tester
-sudo /usr/local/bin/backup.sh
-```
+---
 
-backup_rsync.sh :
+### Sauvegarde incrémentale rsync — `backup_rsync.sh`
+
+`rsync` ne copie que les fichiers **modifiés ou nouveaux**, ce qui le rend bien plus rapide qu'une archive complète pour les sauvegardes régulières.
+
 ```bash
-# Créer le script
 sudo nano /usr/local/bin/backup_rsync.sh
+sudo chmod +x /usr/local/bin/backup_rsync.sh
+sudo /usr/local/bin/backup_rsync.sh
 ```
 
 ```bash
@@ -189,151 +359,238 @@ rsync -av --delete \
 echo "Sauvegarde rsync terminée."
 ```
 
-```bash
-# Rendre exécutable
-sudo chmod +x /usr/local/bin/backup_rsync.sh
+| Option rsync | Signification |
+|--------------|---------------|
+| `-a` | Mode archive : préserve permissions, dates, liens symboliques, etc. |
+| `-v` | Mode verbose : affiche les fichiers copiés |
+| `--delete` | Supprime dans la destination les fichiers absents de la source |
+| `--exclude` | Exclut les fichiers temporaires, logs et caches |
 
-# Tester
-sudo /usr/local/bin/backup_rsync.sh
-```
+> Le `/` final dans `/home/` est important : il copie le **contenu** du dossier, pas le dossier lui-même.
 
-Cron :
+---
+
+### Planification cron — exécution quotidienne à 2h
+
+`cron` est le planificateur de tâches de Linux. On configure la sauvegarde tar pour s'exécuter automatiquement chaque nuit à 2h00.
+
 ```bash
 sudo crontab -e
-# Ajouter :
+# Ajouter la ligne suivante :
 0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
 ```
 
-restore.sh :
+**Syntaxe d'une ligne cron :**
+```
+┌───── minute (0-59)
+│ ┌───── heure (0-23)
+│ │ ┌───── jour du mois (1-31)
+│ │ │ ┌───── mois (1-12)
+│ │ │ │ ┌───── jour de la semaine (0-7)
+│ │ │ │ │
+0 2 * * *   /usr/local/bin/backup.sh
+```
+
+> `>> /var/log/backup.log 2>&1` redirige la sortie standard et les erreurs dans un fichier log pour pouvoir vérifier les exécutions passées.
+
+---
+
+### Script de restauration — `restore.sh`
+
+Ce script restaure une archive dans un répertoire temporaire et compare son contenu avec l'original pour vérifier l'intégrité de la sauvegarde.
+
 ```bash
-# Créer le script
 sudo nano /usr/local/bin/restore.sh
+sudo chmod +x /usr/local/bin/restore.sh
+sudo /usr/local/bin/restore.sh
 ```
 
 ```bash
 #!/bin/bash
-read -p "Archive à restaurer : " ARCHIVE
+read -p "Archive à restaurer : " ARCHIVE    # Ex : /backup/home_20240115_020000.tar.gz
 RESTORE_DIR="/tmp/restore_test"
 mkdir -p "$RESTORE_DIR"
-tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"
+tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"       # Extrait l'archive dans le dossier temporaire
 echo "=== Comparaison ==="
+# Compare récursivement les deux dossiers
 diff -rq /home "$RESTORE_DIR/home" && echo "Contenu identique." || echo "Différences détectées."
 ```
 
-```bash
-# Rendre exécutable
-sudo chmod +x /usr/local/bin/restore.sh
+| Option | Signification |
+|--------|---------------|
+| `tar -x` | Extrait une archive |
+| `tar -C` | Spécifie le répertoire de destination de l'extraction |
+| `diff -r` | Compare récursivement deux répertoires |
+| `diff -q` | Affiche uniquement les noms des fichiers différents |
 
-# Tester
-sudo /usr/local/bin/restore.sh
+---
+
+## Partie 4 — Firewall et fail2ban
+
+Cette partie sécurise l'accès réseau au serveur : UFW filtre le trafic entrant, fail2ban bloque automatiquement les adresses IP malveillantes après plusieurs tentatives d'authentification échouées.
+
+---
+
+### 1. Configuration UFW
+
+UFW (Uncomplicated Firewall) est une interface simplifiée pour `iptables`. On bloque tout le trafic entrant par défaut, puis on autorise uniquement SSH (port 22) et HTTP (port 80).
+
+```bash
+sudo apt install ufw -y
+sudo ufw default deny incoming   # Bloque tout le trafic entrant par défaut
+sudo ufw allow ssh                # Autorise le port 22 (SSH)
+sudo ufw allow http               # Autorise le port 80 (HTTP)
+sudo ufw enable                   # Active le pare-feu
 ```
 
-# Partie 4 — Firewall et fail2ban
+> Il est impératif d'autoriser SSH **avant** d'activer UFW, sinon on risque de se couper l'accès au serveur distant.
+
+---
+
+### 2. Restriction par sous-réseau
+
+On remplace la règle SSH générique par une règle qui limite l'accès SSH à un sous-réseau spécifique, réduisant ainsi la surface d'attaque.
+
 ```bash
-# 1. UFW
-sudo apt install ufw -y
-sudo ufw default deny incoming
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw enable
+sudo ufw delete allow ssh                           # Supprime la règle SSH générique
+sudo ufw allow from 192.168.1.0/24 to any port 22  # Autorise SSH uniquement depuis le réseau local
+```
 
-# 2. Limiter par sous-réseau (ex: autoriser SSH depuis 192.168.1.0/24 seulement)
-sudo ufw delete allow ssh
-sudo ufw allow from 192.168.1.0/24 to any port 22
+> `192.168.1.0/24` représente toutes les adresses de `192.168.1.0` à `192.168.1.255`. Le `/24` signifie que les 24 premiers bits du masque sont fixes, soit les 3 premiers octets.
 
-# 3. fail2ban
+---
+
+### 3. Installation et configuration fail2ban
+
+fail2ban surveille les fichiers de logs et bannit temporairement les adresses IP qui échouent trop souvent à s'authentifier.
+
+```bash
 sudo apt install fail2ban -y
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local   # On travaille sur une copie locale
 sudo nano /etc/fail2ban/jail.local
 ```
 
-Editer /etc/fail2ban/jail.local :
-```bash
+> On copie `jail.conf` en `jail.local` car `jail.conf` peut être écrasé lors des mises à jour du paquet. fail2ban donne la priorité à `jail.local`.
+
+Éditer `/etc/fail2ban/jail.local` — section `[sshd]` :
+
+```ini
 [sshd]
-enabled  = true
-port     = ssh
-maxretry = 3
-bantime  = 600
-findtime = 600
+enabled  = true    # Active la surveillance du service SSH
+port     = ssh     # Port à surveiller
+maxretry = 3       # Nombre d'échecs autorisés avant bannissement
+bantime  = 600     # Durée du bannissement en secondes (10 minutes)
+findtime = 600     # Fenêtre de temps dans laquelle les échecs sont comptabilisés (10 minutes)
 ```
 
+> Si 3 tentatives échouées sont détectées dans une fenêtre de 10 minutes (`findtime`), l'IP est bannie pour 10 minutes (`bantime`).
+
 ```bash
-sudo systemctl enable --now fail2ban
+sudo systemctl enable --now fail2ban   # Active fail2ban au démarrage et le lance immédiatement
 ```
 
-fail2ban_alert.sh :
+---
+
+### Script d'alerte fail2ban — `fail2ban_alert.sh`
+
+Ce script génère un rapport des IPs bannies en analysant le fichier de log de fail2ban.
+
 ```bash
-# Créer le script
 sudo nano /usr/local/bin/fail2ban_alert.sh
+sudo chmod +x /usr/local/bin/fail2ban_alert.sh
+sudo /usr/local/bin/fail2ban_alert.sh
 ```
 
 ```bash
 #!/bin/bash
 LOG="/var/log/fail2ban.log"
 OUTPUT="/home/alice/fail2ban_alert.log"
-echo "=== Rapport fail2ban - $(date) ===" > "$OUTPUT"
+
+echo "=== Rapport fail2ban - $(date) ===" > "$OUTPUT"   # > écrase le fichier existant
 echo "" >> "$OUTPUT"
 echo "IPs bannies :" >> "$OUTPUT"
+# Extrait les IPs bannies, les trie et compte les occurrences par ordre décroissant
 grep "Ban " "$LOG" | awk '{print $NF}' | sort | uniq -c | sort -rn >> "$OUTPUT"
 echo "" >> "$OUTPUT"
 echo "Total bans : $(grep -c 'Ban ' $LOG)" >> "$OUTPUT"
 echo "Rapport généré dans $OUTPUT"
 ```
 
-```bash
-# Rendre exécutable
-sudo chmod +x /usr/local/bin/fail2ban_alert.sh
+> `awk '{print $NF}'` affiche le dernier champ de chaque ligne (l'adresse IP). `uniq -c` préfixe chaque ligne par son nombre d'occurrences. `sort -rn` trie par ordre numérique décroissant pour voir les IPs les plus actives en premier.
 
-# Tester
-sudo /usr/local/bin/fail2ban_alert.sh
-```
+---
 
+### Installation de CrowdSec (optionnel)
 
-Pour CrowdSec :
+CrowdSec est une alternative moderne à fail2ban avec une intelligence collective : les IPs malveillantes détectées par la communauté sont partagées entre tous les utilisateurs.
+
 ```bash
 sudo apt install crowdsec -y
-sudo apt install crowdsec-firewall-bouncer-iptables -y
+sudo apt install crowdsec-firewall-bouncer-iptables -y   # Applique les bannissements via iptables
 # Le scénario SSH est actif par défaut
-sudo cscli scenarios list
+sudo cscli scenarios list   # Affiche les scénarios de détection actifs
 ```
 
-# Partie 5 — Monitoring
+> Le **bouncer** est le composant qui bloque effectivement le trafic au niveau du pare-feu. CrowdSec lui-même se charge uniquement de la détection.
 
-monitor.sh :
+---
+
+## Partie 5 — Monitoring
+
+Cette partie centralise la supervision du système dans un script interactif qui expose les métriques clés (CPU, mémoire, swap, disques) et donne accès aux autres scripts du TP via un menu unifié.
+
+---
+
+### Script de monitoring système — `monitor.sh`
+
 ```bash
-# Créer le script
 sudo nano /usr/local/bin/monitor.sh
+sudo chmod +x /usr/local/bin/monitor.sh
+sudo /usr/local/bin/monitor.sh
 ```
 
 ```bash
 #!/bin/bash
 
+# ─── Fonction d'affichage des métriques système ───
 show_info() {
     echo "==============================="
     echo "  MONITORING SYSTÈME"
     echo "==============================="
-    echo "Hostname     : $(hostname)"
-    echo "Noyau        : $(uname -r)"
+    echo "Hostname     : $(hostname)"    # Nom de la machine sur le réseau
+    echo "Noyau        : $(uname -r)"    # Version du noyau Linux en cours d'exécution
     echo ""
+
     echo "--- CPU ---"
+    # top -bn1 : une seule itération en mode non-interactif
+    # On extrait le % idle ($8) et on le soustrait à 100 pour obtenir l'utilisation réelle
     top -bn1 | grep "Cpu(s)" | awk '{print "Utilisation : " 100-$8 "%"}'
     echo ""
+
     echo "--- MÉMOIRE ---"
+    # free -h : valeurs en unités lisibles (Mo, Go)
+    # awk calcule le % utilisé : mémoire utilisée ($3) / mémoire totale ($2) × 100
     free -h | awk '/^Mem:/ {printf "Utilisée : %s / %s (%.1f%%)\n", $3, $2, $3/$2*100}'
     echo ""
+
     echo "--- SWAP ---"
+    # Calcule le % de swap utilisé (retourne 0 si aucun swap n'est configuré)
     SWAP_PCT=$(free | awk '/^Swap:/ {if($2>0) printf "%.0f", $3/$2*100; else print "0"}')
     echo "Swap utilisé : ${SWAP_PCT}%"
     [ "$SWAP_PCT" -gt 50 ] && echo "ALERTE : Swap > 50% !"
     echo ""
+
     echo "--- DISQUES ---"
+    # df --output=target,pcent : affiche uniquement le point de montage et le % utilisé
+    # tail -n +2 : ignore la ligne d'en-tête
     df -h --output=target,pcent | tail -n +2 | while read MOUNT PCT; do
-        VAL=${PCT%%%}
+        VAL=${PCT%%%}   # Supprime le symbole % pour permettre la comparaison numérique
         echo "$MOUNT : $PCT utilisé"
         [ "$VAL" -gt 80 ] && echo "ALERTE : $MOUNT > 80% !"
     done
 }
 
+# ─── Menu interactif d'administration ───
 menu() {
     echo ""
     echo "==============================="
@@ -356,19 +613,22 @@ menu() {
         6) exit 0 ;;
         *) echo "Choix invalide." ;;
     esac
-    menu
+    menu   # Rappel récursif : revient automatiquement au menu après chaque action
 }
 
-menu
+menu   # Point d'entrée du script
 ```
 
-```bash
-# Rendre exécutable
-sudo chmod +x /usr/local/bin/monitor.sh
+**Récapitulatif des métriques surveillées :**
 
-# Tester
-sudo /usr/local/bin/monitor.sh
-```
+| Métrique | Commande utilisée | Seuil d'alerte |
+|----------|------------------|----------------|
+| CPU | `top -bn1` | — |
+| Mémoire RAM | `free -h` | — |
+| Swap | `free` | > 50% |
+| Espace disque | `df -h` | > 80% par partition |
+
+> Le menu s'appelle récursivement à la fin de chaque action, ce qui permet de revenir automatiquement au menu sans relancer le script. L'option `6` est le seul moyen de quitter proprement via `exit 0`.
 
 # Annexe
 
