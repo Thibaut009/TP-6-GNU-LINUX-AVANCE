@@ -388,6 +388,8 @@ Redimensionner
 
 <img width="398" height="302" alt="image" src="https://github.com/user-attachments/assets/a68bba60-4b20-4abb-82b8-b73741e2afc6" />
 
+<img width="253" height="43" alt="image" src="https://github.com/user-attachments/assets/a808dce9-fce3-4798-83e5-fb16a3483e04" />
+
 
 
 
