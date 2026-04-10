@@ -2,7 +2,7 @@
 
 ---
 
-## Téléchargement
+## Téléchargement VM 
 [Download OVA](https://drive.google.com/file/d/1aCxTl2hmYmmgKyWfsmAMRKavSQVKtnpV/view?usp=drive_link)
 
 Login : thibaut
