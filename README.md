@@ -353,6 +353,7 @@ LVM
 <img width="332" height="108" alt="image" src="https://github.com/user-attachments/assets/67916bd4-5a67-485b-9a88-395b976d638b" />
 
 Formater et monter
+<img width="290" height="139" alt="image" src="https://github.com/user-attachments/assets/c5971826-9b7e-459f-955b-0b8eac1ef9b2" />
 
 
 
