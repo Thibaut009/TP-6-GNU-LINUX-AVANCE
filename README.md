@@ -177,11 +177,24 @@ sudo /usr/local/bin/backup.sh
 
 backup_rsync.sh :
 ```bash
+# Créer le script
+sudo nano /usr/local/bin/backup_rsync.sh
+```
+
+```bash
 #!/bin/bash
 rsync -av --delete \
   --exclude='*.tmp' --exclude='*.log' --exclude='/home/*/.cache' \
   /home/ /backup/backup_rsync/
 echo "Sauvegarde rsync terminée."
+```
+
+```bash
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/backup_rsync.sh
+
+# Tester
+sudo /usr/local/bin/backup_rsync.sh
 ```
 
 Cron :
