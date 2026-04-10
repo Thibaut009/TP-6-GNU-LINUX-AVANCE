@@ -419,7 +419,10 @@ Créez un script de sauvegarde de /home avec tar incluant la date et l’heure d
 
 <img width="254" height="49" alt="image" src="https://github.com/user-attachments/assets/2f7a67aa-0416-40ad-bf1d-eeb9871f527d" />
 
+Implémentez une sauvegarde incrémentale avec rsync vers un dossier backup_rsync, en excluant les
+fichiers temporaires.
 
+<img width="249" height="304" alt="image" src="https://github.com/user-attachments/assets/00fcc5bf-d47d-41eb-8232-b01de66b1d06" />
 
 
 
