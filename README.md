@@ -453,6 +453,9 @@ Configurez un parefeu pour autoriser seulement le port SSH et HTTP.
 
 <img width="264" height="164" alt="image" src="https://github.com/user-attachments/assets/ccd31b8f-8c30-4bc3-b45b-9a235f5d05b9" />
 
+Ajoutez des règles pour limiter l’accès par IP ou sous-réseau. 
+
+<img width="280" height="58" alt="image" src="https://github.com/user-attachments/assets/c45c4299-3f9e-46c6-aa2e-cbc820311575" />
 
 
 
