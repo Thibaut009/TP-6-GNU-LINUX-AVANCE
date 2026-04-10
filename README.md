@@ -324,13 +324,13 @@ show_info() {
     echo "--- SWAP ---"
     SWAP_PCT=$(free | awk '/^Swap:/ {if($2>0) printf "%.0f", $3/$2*100; else print "0"}')
     echo "Swap utilisé : ${SWAP_PCT}%"
-    [ "$SWAP_PCT" -gt 50 ] && echo "⚠️  ALERTE : Swap > 50% !"
+    [ "$SWAP_PCT" -gt 50 ] && echo "ALERTE : Swap > 50% !"
     echo ""
     echo "--- DISQUES ---"
     df -h --output=target,pcent | tail -n +2 | while read MOUNT PCT; do
         VAL=${PCT%%%}
         echo "$MOUNT : $PCT utilisé"
-        [ "$VAL" -gt 80 ] && echo "⚠️  ALERTE : $MOUNT > 80% !"
+        [ "$VAL" -gt 80 ] && echo "ALERTE : $MOUNT > 80% !"
     done
 }
 
