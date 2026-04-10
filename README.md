@@ -157,13 +157,23 @@ backup.sh :
 ```bash
 # Créer le script
 sudo nano /usr/local/bin/backup.sh
+```
 
+```bash
 #!/bin/bash
 DATE=$(date +%Y%m%d_%H%M%S)
 DEST="/backup/home_$DATE.tar.gz"
 mkdir -p /backup
 tar -czf "$DEST" /home
 echo "Sauvegarde créée : $DEST"
+```
+
+```bash
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/backup.sh
+
+# Tester
+sudo /usr/local/bin/backup.sh
 ```
 
 backup_rsync.sh :
