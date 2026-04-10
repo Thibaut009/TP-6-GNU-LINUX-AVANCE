@@ -301,6 +301,11 @@ sudo cscli scenarios list
 
 monitor.sh :
 ```bash
+# Créer le script
+sudo nano /usr/local/bin/monitor.sh
+```
+
+```bash
 #!/bin/bash
 
 show_info() {
@@ -355,6 +360,14 @@ menu() {
 }
 
 menu
+```
+
+```bash
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/monitor.sh
+
+# Tester
+sudo /usr/local/bin/monitor.sh
 ```
 
 Installation des scripts
