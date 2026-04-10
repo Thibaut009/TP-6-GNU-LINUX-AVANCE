@@ -384,6 +384,9 @@ Redimensionner
 
 <img width="401" height="77" alt="image" src="https://github.com/user-attachments/assets/bf6a5a20-b064-4d20-a12a-c2b9333707a9" />
 
+Écrivez un script qui calcule l’espace libre sur chaque LV et alerte si >80% utilisé. 
+
+<img width="398" height="302" alt="image" src="https://github.com/user-attachments/assets/a68bba60-4b20-4abb-82b8-b73741e2afc6" />
 
 
 
