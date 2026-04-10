@@ -102,10 +102,10 @@ sudo vgcreate vg_data /dev/sdb1 /dev/sdc1
 sudo lvcreate -L 1G -n lv_stockage vg_data
 
 # 4. Formater et monter
-sudo mkfs.ext4 /dev/vg_data/lv_data
-sudo mkdir /mnt/lv_data
-sudo mount /dev/vg_data/lv_data /mnt/lv_data
-echo "test LVM" | sudo tee /mnt/lv_data/test.txt
+sudo mkfs.ext4 /dev/vg_data/lv_stockage
+sudo mkdir /mnt/lv_stockage
+sudo mount /dev/vg_data/lv_stockage /mnt/lv_stockage
+echo "test LVM" | sudo tee /mnt/lv_stockage/test.txt
 
 # 5. Redimensionner
 sudo lvextend -L +500M /dev/vg_data/lv_data
