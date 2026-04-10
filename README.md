@@ -428,6 +428,8 @@ Redimensionner
 
 <img width="253" height="43" alt="image" src="https://github.com/user-attachments/assets/a808dce9-fce3-4798-83e5-fb16a3483e04" />
 
+# Partie 3 — Sauvegarde et automatisation
+
 Créez un script de sauvegarde de /home avec tar incluant la date et l’heure dans le nom. 
 
 <img width="254" height="49" alt="image" src="https://github.com/user-attachments/assets/2f7a67aa-0416-40ad-bf1d-eeb9871f527d" />
