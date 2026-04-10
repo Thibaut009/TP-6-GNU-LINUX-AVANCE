@@ -447,7 +447,7 @@ Configurez cron pour que la sauvegarde s’exécute tous les jours à 2h.
 
 <img width="401" height="304" alt="image" src="https://github.com/user-attachments/assets/461648f0-6626-4d39-921d-6ba3af82d6c8" />
 
-# Partie 4 — Sauvegarde et automatisation
+# Partie 4 — Firewall et fail2ban
 
 Configurez un parefeu pour autoriser seulement le port SSH et HTTP.
 
