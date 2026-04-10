@@ -123,7 +123,6 @@ sudo chmod +x /usr/local/bin/check_lvm.sh
 sudo /usr/local/bin/check_lvm.sh
 ```
 
-Script alerte espace LV → lv_alert.sh :
 ```bash
 #!/bin/bash
 THRESHOLD=80
@@ -402,6 +401,10 @@ Redimensionner
 <img width="398" height="302" alt="image" src="https://github.com/user-attachments/assets/a68bba60-4b20-4abb-82b8-b73741e2afc6" />
 
 <img width="253" height="43" alt="image" src="https://github.com/user-attachments/assets/a808dce9-fce3-4798-83e5-fb16a3483e04" />
+
+Créez un script de sauvegarde de /home avec tar incluant la date et l’heure dans le nom. 
+
+<img width="254" height="49" alt="image" src="https://github.com/user-attachments/assets/2f7a67aa-0416-40ad-bf1d-eeb9871f527d" />
 
 
 
