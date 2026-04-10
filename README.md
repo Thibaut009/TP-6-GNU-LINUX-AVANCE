@@ -2,6 +2,9 @@
 
 ---
 
+## Téléchargement
+[Download OVA](https://drive.google.com/file/d/1aCxTl2hmYmmgKyWfsmAMRKavSQVKtnpV/view?usp=drive_link)
+
 ## Partie 1 — Utilisateurs et sécurité
 
 Cette partie couvre la gestion des utilisateurs et des groupes sous Linux, ainsi que la mise en place de politiques de sécurité pour les mots de passe.
