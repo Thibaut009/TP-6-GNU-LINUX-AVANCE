@@ -261,7 +261,12 @@ findtime = 600
 sudo systemctl enable --now fail2ban
 ```
 
-Script analyse fail2ban → fail2ban_alert.sh :
+fail2ban_alert.sh :
+```bash
+# Créer le script
+sudo nano /usr/local/bin/fail2ban_alert.sh
+```
+
 ```bash
 #!/bin/bash
 LOG="/var/log/fail2ban.log"
@@ -274,6 +279,15 @@ echo "" >> "$OUTPUT"
 echo "Total bans : $(grep -c 'Ban ' $LOG)" >> "$OUTPUT"
 echo "Rapport généré dans $OUTPUT"
 ```
+
+```bash
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/fail2ban_alert.sh
+
+# Tester
+sudo /usr/local/bin/fail2ban_alert.sh
+```
+
 
 Pour CrowdSec :
 ```bash
