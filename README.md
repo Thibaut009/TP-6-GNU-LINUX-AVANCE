@@ -482,4 +482,5 @@ Installez et configurez fail2ban pour le port SSH : bannir une IP après 3 éche
 
 <img width="311" height="82" alt="image" src="https://github.com/user-attachments/assets/47917706-0813-447b-a88d-f4ea4298f382" />
 
+# Partie 5 — Monitoring
 
