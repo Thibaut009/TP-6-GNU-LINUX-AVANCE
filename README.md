@@ -498,10 +498,15 @@ Installez et configurez fail2ban pour le port SSH : bannir une IP après 3 éche
 # Partie 5 — Monitoring
 
 Écrivez un script shell qui affiche :
+
 o Nom de la machine sur le réseau
+
 o Version du noyau
+
 o Utilisation CPU/mémoire
+
 o Pourcentage swap utilisé
+
 o Pourcentage espace disque sur chaque partition 
 
 <img width="406" height="302" alt="image" src="https://github.com/user-attachments/assets/3925fbdb-d791-49d7-aeb5-5c6ad3f17e13" />
