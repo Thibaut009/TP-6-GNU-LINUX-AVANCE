@@ -445,7 +445,8 @@ Configurez cron pour que la sauvegarde s’exécute tous les jours à 2h.
 
 Écrivez un script qui restaure une archive et compare le contenu avec l’original 
 
-<img width="403" height="305" alt="image" src="https://github.com/user-attachments/assets/200ec1ef-6159-4ef0-9553-ffbf1f592010" />
+<img width="401" height="305" alt="image" src="https://github.com/user-attachments/assets/98caf9fe-1b72-493a-9a15-00721a47f9b8" />
+
 
 
 
