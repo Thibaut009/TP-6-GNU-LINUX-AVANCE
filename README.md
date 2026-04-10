@@ -117,12 +117,26 @@ Script alerte espace LV → lv_alert.sh :
 ```bash
 #!/bin/bash
 THRESHOLD=80
-lvs --noheadings -o lv_path,data_percent | while read LV USAGE; do
-    USAGE_INT=${USAGE%.*}
-    if [ "$USAGE_INT" -ge "$THRESHOLD" ]; then
-        echo "ALERTE : $LV utilise ${USAGE}% de son espace !"
+
+echo "=== Vérification espace LVM ==="
+echo ""
+
+lvs --noheadings -o lv_path | while read LV; do
+    # Vérifier si le LV est monté
+    MOUNT=$(findmnt -n -o TARGET "$LV" 2>/dev/null)
+
+    if [ -z "$MOUNT" ]; then
+        echo "⚠️  $LV : non monté, impossible de vérifier"
+        continue
+    fi
+
+    # Lire l'usage réel via df
+    USAGE=$(df "$MOUNT" | awk 'NR==2 {gsub("%",""); print $5}')
+
+    if [ "$USAGE" -ge "$THRESHOLD" ]; then
+        echo "🔴 ALERTE : $LV ($MOUNT) utilise ${USAGE}% — seuil de ${THRESHOLD}% dépassé !"
     else
-        echo "$LV : ${USAGE}% utilisé (OK)"
+        echo "✅ $LV ($MOUNT) : ${USAGE}% utilisé (OK)"
     fi
 done
 ```
