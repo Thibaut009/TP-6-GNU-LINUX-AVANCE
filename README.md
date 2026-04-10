@@ -509,6 +509,8 @@ o Pourcentage swap utilisé
 
 o Pourcentage espace disque sur chaque partition 
 
-<img width="403" height="306" alt="image" src="https://github.com/user-attachments/assets/05f5802e-1173-43df-b117-6543458ccbcb" />
+<img width="402" height="308" alt="image" src="https://github.com/user-attachments/assets/11f9230d-2342-4166-9dde-59ef2e96ec26" />
 
+
+<img width="404" height="305" alt="image" src="https://github.com/user-attachments/assets/43c267d0-b990-42f6-8457-16c0ed3a1690" />
 
