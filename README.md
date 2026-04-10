@@ -111,6 +111,16 @@ echo "test LVM" | sudo tee /mnt/lv_stockage/test.txt
 sudo lvextend -L +500M /dev/vg_data/lv_stockage
 sudo resize2fs /dev/vg_data/lv_stockage
 cat /mnt/lv_stockage/test.txt   # vérifier intégrité
+
+# 6. Écrivez un script qui calcule l’espace libre sur chaque LV et alerte si >80% utilisé. 
+# Créer le script
+sudo nano /usr/local/bin/check_lvm.sh
+
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/check_lvm.sh
+
+# Lancer
+sudo /usr/local/bin/check_lvm.sh
 ```
 
 Script alerte espace LV → lv_alert.sh :
