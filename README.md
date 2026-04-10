@@ -457,6 +457,9 @@ Ajoutez des règles pour limiter l’accès par IP ou sous-réseau.
 
 <img width="280" height="58" alt="image" src="https://github.com/user-attachments/assets/c45c4299-3f9e-46c6-aa2e-cbc820311575" />
 
+Installez et configurez fail2ban pour le port SSH : bannir une IP après 3 échecs pendant 10 minutes. 
+
+<img width="406" height="305" alt="image" src="https://github.com/user-attachments/assets/2c12eedd-01c4-47f4-8f33-b32684dac7f7" />
 
 
 
