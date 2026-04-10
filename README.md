@@ -136,7 +136,7 @@ lvs --noheadings -o lv_path | while read LV; do
     MOUNT=$(findmnt -n -o TARGET "$LV" 2>/dev/null)
 
     if [ -z "$MOUNT" ]; then
-        echo "⚠️  $LV : non monté, impossible de vérifier"
+        echo "$LV : non monté, impossible de vérifier"
         continue
     fi
 
@@ -144,9 +144,9 @@ lvs --noheadings -o lv_path | while read LV; do
     USAGE=$(df "$MOUNT" | awk 'NR==2 {gsub("%",""); print $5}')
 
     if [ "$USAGE" -ge "$THRESHOLD" ]; then
-        echo "🔴 ALERTE : $LV ($MOUNT) utilise ${USAGE}% — seuil de ${THRESHOLD}% dépassé !"
+        echo "ALERTE : $LV ($MOUNT) utilise ${USAGE}% — seuil de ${THRESHOLD}% dépassé !"
     else
-        echo "✅ $LV ($MOUNT) : ${USAGE}% utilisé (OK)"
+        echo "$LV ($MOUNT) : ${USAGE}% utilisé (OK)"
     fi
 done
 ```
