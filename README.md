@@ -370,12 +370,6 @@ sudo chmod +x /usr/local/bin/monitor.sh
 sudo /usr/local/bin/monitor.sh
 ```
 
-Installation des scripts
-```bash
-sudo cp backup.sh backup_rsync.sh restore.sh fail2ban_alert.sh monitor.sh add_user.sh lv_alert.sh /usr/local/bin/
-sudo chmod +x /usr/local/bin/*.sh
-```
-
 # Annexe
 
 # Partie 1 — Utilisateurs et sécurité
