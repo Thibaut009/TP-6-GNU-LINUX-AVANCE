@@ -206,6 +206,11 @@ sudo crontab -e
 
 restore.sh :
 ```bash
+# Créer le script
+sudo nano /usr/local/bin/restore.sh
+```
+
+```bash
 #!/bin/bash
 read -p "Archive à restaurer : " ARCHIVE
 RESTORE_DIR="/tmp/restore_test"
@@ -213,6 +218,14 @@ mkdir -p "$RESTORE_DIR"
 tar -xzf "$ARCHIVE" -C "$RESTORE_DIR"
 echo "=== Comparaison ==="
 diff -rq /home "$RESTORE_DIR/home" && echo "Contenu identique." || echo "Différences détectées."
+```
+
+```bash
+# Rendre exécutable
+sudo chmod +x /usr/local/bin/restore.sh
+
+# Tester
+sudo /usr/local/bin/restore.sh
 ```
 
 # Partie 4 — Firewall et fail2ban
